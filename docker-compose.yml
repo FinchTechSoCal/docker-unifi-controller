@@ -1,0 +1,32 @@
+---
+version: "2.1"
+services:
+#
+  unifi-controller:
+    image: lscr.io/linuxserver/unifi-controller
+    container_name: unifi-controller
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - MEM_LIMIT=1024 #optional
+      - MEM_STARTUP=1024 #optional
+    volumes:
+      - ${LOCVOL1}unifi-controller:/config
+    ports:
+      - 8080:8080 # REQUIRED - Required for device communication
+      - 3478:3478/udp # Unifi STUN port
+      #- 10001:10001/udp # Required for AP discovery
+      #- 8443:8443 - Unifi web admin port
+      #- 1900:1900/udp #optional - Required for Make controller discoverable on L2 network option
+      #- 8843:8843 #optional - Unifi guest portal HTTPS redirect port
+      #- 8880:8880 #optional - Unifi guest portal HTTP redirect port
+      #- 6789:6789 #optional - For mobile throughput test
+      #- 5514:5514/udp #optional - Remote syslog port
+    restart: unless-stopped
+#
+#
+networks:
+  default:
+    external:
+      name: ${CONNET}
